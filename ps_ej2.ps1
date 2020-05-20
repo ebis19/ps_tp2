@@ -39,8 +39,8 @@ Param(
  }
  catch {
      Write-OutPut "El archivo que quiere ingresar es invalido "
-     Exit 1
- }  Get-Help 
+     Exit 1 
+ }  
    
 
 
