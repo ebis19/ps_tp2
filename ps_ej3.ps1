@@ -89,12 +89,14 @@ function cantidaddellamadas {
 
 Write-OutPut "Promedio total x Dia"
 
-foreach($dia in $dias.dia){
+$PromedioTotalxDia =foreach($dia in $dias.dia){
     $llamadasxDia = $p | Where-Object { ($_.tiempo).DayOfWeek.toString() -eq $dia}
     $cant= $llamadasxDia | cantidaddellamadas
     $tiempo= $llamadasxDia | tiempodellamadas
     Write-OutPut  ($tiempo / $cant) | Select-Object @{Name="Dia";Expression={$dia}},@{Name="promedio";Expression={$_}}
 } 
+
+$PromedioTotalxDia | Format-List
 
 Write-OutPut ""
 Write-OutPut ""
@@ -128,7 +130,7 @@ $prom = foreach($dia in $dias.dia){
         } 
 }
 
-$prom | Format-Table
+$prom | Format-List
 
 
 Write-OutPut "Mayores de la semana"
@@ -140,7 +142,7 @@ $cantusr = foreach($usr in $usuarios.usuario){
     Write-OutPut  $cant | Select-Object @{Name="Usuario";Expression={$usr}},@{Name="Cantidad";Expression={$_}}
 } 
 
-$cantusr | Sort-Object -Property Cantidad -Descending | Select-Object -First 3
+$cantusr | Sort-Object -Property Cantidad -Descending | Select-Object -First 3 | Format-List
 
 
 $Llamadas30omenosxDia =foreach($dia in $dias.dia){
@@ -150,7 +152,7 @@ $Llamadas30omenosxDia =foreach($dia in $dias.dia){
 } 
 
 
-$Llamadas30omenosxDia | Format-Table
+$Llamadas30omenosxDia | Format-List
 
 
 
@@ -160,4 +162,4 @@ $Llamadas30omenosxUsuario= foreach($usr in $usuarios.usuario){
     Write-OutPut  $counter | Select-Object @{Name="Usuario";Expression={$usr}},@{Name="Cantidad";Expression={($_).Count}}
 } 
 
-$Llamadas30omenosxUsuario | Sort-Object -Property Cantidad -Descending | Select-Object -First 1
+$Llamadas30omenosxUsuario | Sort-Object -Property Cantidad -Descending | Select-Object -First 1 | Format-List
