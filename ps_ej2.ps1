@@ -25,20 +25,25 @@
          
 #>
 
-Param(
-    #[Parameter(Mandatory=$True,  Position=1)] [string]$path
-    
-    [parameter(Mandatory=$true)]
-    [ValidateScript({Test-Path $_})]
-    [IO.FileInfo]$Path 
-     )
 
-     
+
+
+    Param(
+        #[Parameter(Mandatory=$True,  Position=1)] [string]$path
+        [parameter(Mandatory=$true , Position=1 )]
+        [IO.FileInfo]$Path 
+    )
+
+    if (!(Test-Path $Path )){
+        Write-Error "No existe el archivo ingresado"
+        Exit 1 
+      }
+
  try {
     $P = Import-Csv -Path $Path -Delimiter "_" -Header 'tiempo', 'usuario' | Select-Object usuario,@{Name="tiempo";Expression={Get-Date $_.tiempo}}
  }
  catch {
-     Write-OutPut "El archivo que quiere ingresar es invalido "
+    Write-Error "El archivo que quiere ingresar es invalido "
      Exit 1 
  }  
    
@@ -131,8 +136,6 @@ $PromedioTotalxDia =foreach($dia in $dias.dia){
 } 
 
 $PromedioTotalxDia | Format-List
-
-Write-OutPut ""
 Write-OutPut ""
 Write-OutPut "Promedio x usuario x Dia"
 
@@ -178,6 +181,7 @@ $cantusr = foreach($usr in $usuarios.usuario){
 
 $cantusr | Sort-Object -Property Cantidad -Descending | Select-Object -First 3 | Format-List
 
+Write-OutPut "Llamadas menor a 30"
 
 $Llamadas30omenosxDia =foreach($dia in $dias.dia){
     $llamadasxDia = $p | Where-Object { ($_.tiempo).DayOfWeek.toString() -eq $dia}
@@ -187,8 +191,7 @@ $Llamadas30omenosxDia =foreach($dia in $dias.dia){
 
 
 $Llamadas30omenosxDia | Format-List
-
-
+Write-OutPut "Usuario con mayor cantidad de llamadas menor a 30"
 
 $Llamadas30omenosxUsuario= foreach($usr in $usuarios.usuario){
     $llamadasxDia = $p | Where-Object { $usr -eq $_.usuario}
