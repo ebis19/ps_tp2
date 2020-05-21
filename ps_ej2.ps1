@@ -31,24 +31,19 @@
     Param(
         #[Parameter(Mandatory=$True,  Position=1)] [string]$path
         [parameter(Mandatory=$true , Position=1 )]
-        [IO.FileInfo]$Path 
+        [String]$Path 
     )
 
     if (!(Test-Path $Path )){
-        Write-Error "No existe el archivo ingresado"
+        Write-Error "No existe el directorio ingresado"
         Exit 1 
       }
+      
 
- try {
-    $P = Import-Csv -Path $Path -Delimiter "_" -Header 'tiempo', 'usuario' | Select-Object usuario,@{Name="tiempo";Expression={Get-Date $_.tiempo}}
- }
- catch {
-    Write-Error "El archivo que quiere ingresar es invalido "
-     Exit 1 
- }  
-   
+Get-ChildItem -Path $Path -Attributes !Directory  | ForEach-Object { 
 
-
+    $P += @(Import-Csv -Path $_ -Delimiter "_" -Header 'tiempo', 'usuario' | Select-Object usuario,@{Name="tiempo";Expression={Get-Date $_.tiempo}})
+}
 
 $usuarios = $P | Select-Object -Unique -Property usuario 
 
