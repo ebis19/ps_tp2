@@ -25,9 +25,6 @@
          
 #>
 
-
-
-
     Param(
         #[Parameter(Mandatory=$True,  Position=1)] [string]$path
         [parameter(Mandatory=$true , Position=1 )]
@@ -44,8 +41,6 @@ Get-ChildItem -Path $Path -Attributes !Directory  | ForEach-Object {
 
     $P += @(Import-Csv -Path $_ -Delimiter "_" -Header 'tiempo', 'usuario' | Select-Object usuario,@{Name="tiempo";Expression={Get-Date $_.tiempo}})
 }
-
-
 
 $usuarios = $P | Select-Object -Unique -Property usuario 
 
@@ -178,22 +173,24 @@ $cantusr = foreach($usr in $usuarios.usuario){
 
 $cantusr | Sort-Object -Property Cantidad -Descending | Select-Object -First 3 | Format-List
 
-Write-OutPut "Llamadas menor a 30"
+Write-Output "Cantidad de llamadas Menos la media del dia "
 
-$Llamadas30omenosxDia =foreach($dia in $dias.dia){
-    $llamadasxDia = $p | Where-Object { ($_.tiempo).DayOfWeek.toString() -eq $dia}
-    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_).Minutes -lt 30 } | Measure-Object
+$LlamadasMenosMediaxDia =foreach($dia in $dias.dia){
+    $llamadasxDia = $p | Where-Object { ($_.tiempo).DayOfWeek.toString() -eq $dia }
+    $prom = $PromedioTotalxDia| Where-Object { $_.Dia -eq $dia }
+    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_).Promedio -lt $prom.Promedio } | Measure-Object
     Write-OutPut  $counter | Select-Object @{Name="Dia";Expression={$dia}},@{Name="Cantidad";Expression={($_).Count}}
 } 
 
 
-$Llamadas30omenosxDia | Format-List
-Write-OutPut "Usuario con mayor cantidad de llamadas menor a 30"
+$LlamadasMenosMediaxDia | Format-List
 
-$Llamadas30omenosxUsuario= foreach($usr in $usuarios.usuario){
+
+$LlamadasMenosMediaxUsuario= foreach($usr in $usuarios.usuario){
     $llamadasxDia = $p | Where-Object { $usr -eq $_.usuario}
-    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_).Minutes -lt 30 } | Measure-Object
+    $prom = $PromedioTotalxDia| Where-Object { $_.Dia -eq $dia }
+    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_).Promedio -lt $prom.Promedio } | Measure-Object
     Write-OutPut  $counter | Select-Object @{Name="Usuario";Expression={$usr}},@{Name="Cantidad";Expression={($_).Count}}
 } 
 
-$Llamadas30omenosxUsuario | Sort-Object -Property Cantidad -Descending | Select-Object -First 1 | Format-List
+$LlamadasMenosMediaxUsuario | Sort-Object -Property Cantidad -Descending | Select-Object -First 1 | Format-List
