@@ -1,7 +1,7 @@
 <#
 
 .SYNOPSIS
-    El siguente  script procesa el archivo especificado en el path y  muestra 
+    El siguente  script procesa los archivos especificados en el path y  muestra 
         1-Promedio de tiempo de las llamadas realizadas por día.
         2-Promedio de tiempo y cantidad por usuario por día.
         3-Los 3 usuarios con más llamadas en la semana.
