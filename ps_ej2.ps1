@@ -9,7 +9,7 @@
         5-llamadas por debajo de la media en la semana.
     
 .DESCRIPTION
-    Para ejecutar se debera poner como parametro (-path) el archivo 
+    Para ejecutar se debera poner como parametro (-path) del directorio
     el cual se que procesar el cual debera tener el siguente
     formato :
         Fecha y Hora: Formato YYYY-MM-DD HH:mm:ss
@@ -18,7 +18,7 @@
 
 
 .EXAMPLE
-    ./ps_ej2.ps1 -path log/file.txt
+    ./ps_ej2.ps1 -path log/
 
 .NOTES
     Los autores son
@@ -44,6 +44,8 @@ Get-ChildItem -Path $Path -Attributes !Directory  | ForEach-Object {
 
     $P += @(Import-Csv -Path $_ -Delimiter "_" -Header 'tiempo', 'usuario' | Select-Object usuario,@{Name="tiempo";Expression={Get-Date $_.tiempo}})
 }
+
+
 
 $usuarios = $P | Select-Object -Unique -Property usuario 
 
