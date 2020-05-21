@@ -182,14 +182,13 @@ $LlamadasMenosMediaxDia =foreach($dia in $dias.dia){
     Write-OutPut  $counter | Select-Object @{Name="Dia";Expression={$dia}},@{Name="Cantidad";Expression={($_).Count}}
 } 
 
-
 $LlamadasMenosMediaxDia | Format-List
 
 
 $LlamadasMenosMediaxUsuario= foreach($usr in $usuarios.usuario){
     $llamadasxDia = $p | Where-Object { $usr -eq $_.usuario}
     $prom = $PromedioTotalxDia| Where-Object { $_.Dia -eq $dia }
-    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_).Promedio -lt $prom.Promedio } | Measure-Object
+    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_) -lt $prom.Promedio } | Measure-Object
     Write-OutPut  $counter | Select-Object @{Name="Usuario";Expression={$usr}},@{Name="Cantidad";Expression={($_).Count}}
 } 
 
