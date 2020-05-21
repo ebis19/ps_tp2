@@ -184,11 +184,15 @@ $LlamadasMenosMediaxDia =foreach($dia in $dias.dia){
 
 $LlamadasMenosMediaxDia | Format-List
 
-$prom = ($PromedioTotalxDia | Measure-Object -Average).average
+$tiempossemanales= $P | tiempoxllamada;
+$tiempossemanales | ForEach-Object { 
+    $sum += $_
+}
+$promedio = $sum / ($tiempossemanales| Measure-Object).Count
 
 $LlamadasMenosMediaxUsuario= foreach($usr in $usuarios.usuario){
     $llamadasxUsuario = $p | Where-Object { $usr -eq $_.usuario} 
-    $counter = $llamadasxDia | tiempoxllamada |  Where-Object { ($_) -lt $prom.Promedio } | Measure-Object
+    $counter = $llamadasxUsuario | tiempoxllamada |  Where-Object { ($_) -lt $promedio } | Measure-Object
     Write-OutPut  $counter | Select-Object @{Name="Usuario";Expression={$usr}},@{Name="Cantidad";Expression={($_).Count}}
 } 
 
